@@ -23,8 +23,8 @@ jobs:
       - name: List files in project directory
         run: ls -la ./
       
-      - name: Copy README.md to project directory
-        run: cp ../README.md ./Otel.Sdk/
+      # - name: Copy README.md to project directory
+      #   run: cp ../README.md ./Otel.Sdk/
 
       - name: List files in project directory
         run: ls -la ./Otel.Sdk/
