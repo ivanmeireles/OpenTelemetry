@@ -51,10 +51,17 @@ namespace Otel.Sdk.Extensions
                     {
                         ExportIntervalMilliseconds = 10000
                     };
-                })
-                .AddRuntimeInstrumentation()
-                .AddHttpClientInstrumentation()
-                .AddAspNetCoreInstrumentation();
+                });
+             
+                if (config.MetricConfig.HttpClientInstrumentationDisabled == false)
+                    builder.AddHttpClientInstrumentation();
+
+                if (config.MetricConfig.RuntimeInstrumentationDisabled == false)
+                    builder.AddRuntimeInstrumentation();
+
+                if (config.MetricConfig.AspNetCoreInstrumentationDisabled == false)
+                    builder.AddAspNetCoreInstrumentation();
+
 
                 if (config.EnableConsoleExporter)
                     builder.AddConsoleExporter();

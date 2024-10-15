@@ -4,6 +4,11 @@ namespace Otel.Sdk.Configuration
 {
     public class OtlpConfig
     {
+        public OtlpConfig()
+        {
+            MetricConfig = new MetricConfig();
+        }
+
         public string ServiceName { get; set; }
         public string ServiceVersion { get; set; }
         public string Endpoint { get; set; }
@@ -12,5 +17,14 @@ namespace Otel.Sdk.Configuration
 
 
         public List<string> TraceIgnoreApplicationPathStartWith { get; set; }
+        public MetricConfig MetricConfig { get; set; }
+
+    }
+
+    public class MetricConfig
+    {
+        public bool RuntimeInstrumentationDisabled { get; set; }
+        public bool HttpClientInstrumentationDisabled { get; set; }
+        public bool AspNetCoreInstrumentationDisabled { get; set; }
     }
 }
