@@ -38,7 +38,24 @@ namespace Otel.Sdk.Extensions
                         ResourceBuilder.CreateDefault()
                             .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion))
                     .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation();
+                    .AddAspNetCoreInstrumentation(options =>
+                    {
+                        if (config.TraceIgnoreApplicationPathStartWith?.Count > 0)
+                        {
+                            foreach (var item in config.TraceIgnoreApplicationPathStartWith)
+                            {
+                                bool shouldIgnore = false;
+                                options.Filter = context =>
+                                {
+                                    shouldIgnore = context.Request.Path.ToString().StartsWith(item);
+                                    return !shouldIgnore;
+                                };
+
+                                if (shouldIgnore)
+                                    break;
+                            }
+                        }
+                    });
 
                 if (config.EnableConsoleExporter)
                     builder.AddConsoleExporter();

@@ -5,6 +5,13 @@ VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Otel.Sdk", "Otel.Sdk\Otel.Sdk.csproj", "{B167CA3A-CD8F-4F0A-B9C1-8BE32CA7C4AD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{64CD09BF-691C-4056-81E6-E9991D58B8FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{D607E8ED-45A7-4EB7-B0B2-BE3DCD26FEDB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\nuget.yaml = .github\workflows\nuget.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +25,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D607E8ED-45A7-4EB7-B0B2-BE3DCD26FEDB} = {64CD09BF-691C-4056-81E6-E9991D58B8FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4757F2F-4AA5-4F34-8E62-7B1DF3036F8E}
