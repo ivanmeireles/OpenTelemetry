@@ -9,8 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{64CD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{D607E8ED-45A7-4EB7-B0B2-BE3DCD26FEDB}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\nuget.yaml = .github\workflows\nuget.yaml
+		.github\workflows\OtelMassTransit.yaml = .github\workflows\OtelMassTransit.yaml
+		.github\workflows\OtelSdk.yaml = .github\workflows\OtelSdk.yaml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Otel.MassTransit", "Otel.MassTransit\Otel.MassTransit.csproj", "{E701F377-F0BA-4B77-A3B3-8D5FC27B1217}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +25,10 @@ Global
 		{B167CA3A-CD8F-4F0A-B9C1-8BE32CA7C4AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B167CA3A-CD8F-4F0A-B9C1-8BE32CA7C4AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B167CA3A-CD8F-4F0A-B9C1-8BE32CA7C4AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E701F377-F0BA-4B77-A3B3-8D5FC27B1217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E701F377-F0BA-4B77-A3B3-8D5FC27B1217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E701F377-F0BA-4B77-A3B3-8D5FC27B1217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E701F377-F0BA-4B77-A3B3-8D5FC27B1217}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

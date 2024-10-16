@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <Version>1.3.0-beta1</Version>
+	<RootNamespace>Otel.MassTransit</RootNamespace>
+	<PackageTags>Otel;OpenTelemetry;MassTransit</PackageTags>
+	<PackageDescription>OpenTelemetry package.</PackageDescription>
+	<!-- <PackageReadmeFile>README.md</PackageReadmeFile> -->
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PackageProjectUrl>https://github.com/ivanmeireles/OpenTelemetry</PackageProjectUrl>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.3.0" />
+    <PackageReference Include="Otel.Sdk" Version="1.2.0-beta1" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,42 @@
+name: Build and Publish NuGet Package
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - Otel.MassTransit/**
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+      
+      - name: List files in project directory
+        run: ls -la ./
+      
+      # - name: Copy README.md to project directory
+      #   run: cp ../README.md ./Otel.MassTransit/
+
+      - name: List files in project directory
+        run: ls -la ./Otel.MassTransit/
+
+      - name: Build the project
+        run: dotnet build --configuration Release --no-restore Otel.MassTransit/Otel.MassTransit.csproj
+
+      - name: Pack the project
+        run: dotnet pack --configuration Release --no-build --output ./nupkg Otel.MassTransit/Otel.MassTransit.csproj
+
+      - name: Publish NuGet Package
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key $NUGET_API_KEY --source "https://api.nuget.org/v3/index.json"
