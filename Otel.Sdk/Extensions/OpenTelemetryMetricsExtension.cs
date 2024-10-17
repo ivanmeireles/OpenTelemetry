@@ -81,7 +81,7 @@ namespace Otel.Sdk.Extensions
                 {
 
                     HEART_BEAT.Add(1);
-                    await Task.Delay(15000);
+                    await Task.Delay(30000);
                 }
             });
         }
