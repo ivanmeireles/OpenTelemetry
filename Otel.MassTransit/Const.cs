@@ -7,5 +7,7 @@
         public const string HEADER_PUBLISH = "x_otel_publish";
 
         public const string METRIC_CONSUMER_NAME = "masstransit_consumer";
+        public const string METRIC_SEND_NAME = "masstransit_send";
+        public const string METRIC_PUBLISH_NAME = "masstransit_publish";
     }
 }

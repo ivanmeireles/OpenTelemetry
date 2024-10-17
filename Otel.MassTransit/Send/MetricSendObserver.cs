@@ -6,35 +6,35 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Otel.MassTransit.Consume
+namespace Otel.MassTransit.Send
 {
-    public class MetricConsumeObserver : IConsumeObserver
+    public class MetricPublishObserver : ISendObserver
     {
-        private readonly IMetricService _metricService;
         private Stopwatch _stopwatch;
+        private readonly IMetricService _metricService;
         private IDictionary<string, object?> _tags;
 
         private const string TAG_SUCCESS = "success";
         private const string TAG_EXCEPTION_NAME = "exception_name";
 
-        public MetricConsumeObserver(IMetricService metricService)
+        public MetricPublishObserver(IMetricService metricService)
         {
             _metricService = metricService;
             _tags = new Dictionary<string, object?>();
         }
 
-        public async Task PreConsume<T>(ConsumeContext<T> context) where T : class
+        public async Task PreSend<T>(SendContext<T> context) where T : class
         {
             _stopwatch = Stopwatch.StartNew();
         }
 
-        public async Task PostConsume<T>(ConsumeContext<T> context) where T : class
+        public async Task PostSend<T>(SendContext<T> context) where T : class
         {
             _tags.TryAdd(TAG_SUCCESS, true);
             DoneConsume();
         }
 
-        public async Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
+        public async Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
         {
             _tags.TryAdd(TAG_SUCCESS, false);
             _tags.TryAdd(TAG_EXCEPTION_NAME, exception.GetType().Name);
@@ -46,7 +46,7 @@ namespace Otel.MassTransit.Consume
             _stopwatch.Stop();
             var elapsedTime = (int)_stopwatch.ElapsedMilliseconds;
 
-            _metricService.HistogramRecord(Const.METRIC_CONSUMER_NAME, elapsedTime, _tags.ToArray());
+            _metricService.HistogramRecord(Const.METRIC_SEND_NAME, elapsedTime, _tags.ToArray());
         }
     }
 }
