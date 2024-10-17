@@ -9,6 +9,7 @@ using System.Diagnostics.Metrics;
 using OpenTelemetry.Resources;
 using Otel.Sdk.HttpMiddleware;
 using Otel.Sdk.Metric;
+using System.Threading.Tasks;
 
 
 namespace Otel.Sdk.Extensions
@@ -16,11 +17,13 @@ namespace Otel.Sdk.Extensions
     public static class OpenTelemetryMetricsExtension
     {
         internal static Meter METER;
+        internal static Counter<int> HEART_BEAT;
         internal static Counter<int> HTTP_REQUEST_COUNTER;
         internal static Counter<int> HTTP_REQUEST_200_COUNTER;
         internal static Counter<int> HTTP_REQUEST_400_COUNTER;
         internal static Counter<int> HTTP_REQUEST_500_COUNTER;
         internal static Histogram<int> HTTP_REQUEST_ELAPSED_TIME;
+
 
         public static MeterProviderBuilder AddOtlpMetrics(this IServiceCollection services, OtlpConfig config)
         {
@@ -67,7 +70,20 @@ namespace Otel.Sdk.Extensions
                     builder.AddConsoleExporter();
             });
 
+            
             return meterBuilder;
+        }
+
+        private static void StartHeartBeat()
+        {
+            Task.Run(async() => {
+                while (true)
+                {
+
+                    HEART_BEAT.Add(1);
+                    await Task.Delay(15000);
+                }
+            });
         }
 
         public static IApplicationBuilder UseMetrics(this IApplicationBuilder builder)
@@ -75,11 +91,14 @@ namespace Otel.Sdk.Extensions
             if (METER is null)
                 throw new MetricStartupException();
 
+            HEART_BEAT = METER.CreateCounter<int>("heart_beat");
             HTTP_REQUEST_COUNTER = METER.CreateCounter<int>("http_request_total_count");
             HTTP_REQUEST_200_COUNTER = METER.CreateCounter<int>("http_request_family_200_total_count");
             HTTP_REQUEST_400_COUNTER = METER.CreateCounter<int>("http_request_family_400_total_count");
             HTTP_REQUEST_500_COUNTER = METER.CreateCounter<int>("http_request_family_500_total_count");
             HTTP_REQUEST_ELAPSED_TIME = METER.CreateHistogram<int>("http_request_elaspsed_time");
+
+            StartHeartBeat();
 
             return builder.UseMiddleware<HttpRequestMetricsMiddleware>();
         }
