@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Otel.MassTransit.Send
 {
-    public class MetricPublishObserver : ISendObserver
+    public class MetricSendObserver : ISendObserver
     {
         private Stopwatch _stopwatch;
         private readonly IMetricService _metricService;
@@ -17,7 +17,7 @@ namespace Otel.MassTransit.Send
         private const string TAG_SUCCESS = "success";
         private const string TAG_EXCEPTION_NAME = "exception_name";
 
-        public MetricPublishObserver(IMetricService metricService)
+        public MetricSendObserver(IMetricService metricService)
         {
             _metricService = metricService;
             _tags = new Dictionary<string, object?>();
