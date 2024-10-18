@@ -18,12 +18,12 @@ namespace Otel.MassTransit.Consume
 
         public async Task PreConsume<T>(ConsumeContext<T> context) where T : class
         {
-            var headerValue = context.GetHeader(Const.HEADER_SEND);
-            var wasCommand = headerValue == "true";
+            //var headerValue = context.GetHeader(Const.HEADER_SEND);
+            //var wasCommand = headerValue == "true";
             var traceId = string.Empty;
 
-            if (wasCommand)
-                traceId = context.GetHeader(Const.HEADER_TRACE_ID);
+            //if (wasCommand)
+            traceId = context.GetHeader(Const.HEADER_TRACE_ID);
 
             activity = _traceService.StartActivity("Consumer", ActivityKind.Consumer, traceId);
         }
