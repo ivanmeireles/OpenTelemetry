@@ -38,9 +38,9 @@ namespace Otel.Sdk.Extensions
                         ResourceBuilder.CreateDefault()
                             .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion))
                     .AddHttpClientInstrumentation(options => {
-                        if (config.TraceConfig?.IgnoreHttpClientDnsStartWith?.Count > 0)
+                        if (config.TraceConfig?.IgnoreHttpClientHostStartWith?.Count > 0)
                         {
-                            foreach (var item in config.TraceConfig.IgnoreHttpClientDnsStartWith)
+                            foreach (var item in config.TraceConfig.IgnoreHttpClientHostStartWith)
                             {
                                 bool shouldIgnore = false;
 

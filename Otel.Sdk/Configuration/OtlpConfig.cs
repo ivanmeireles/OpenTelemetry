@@ -24,7 +24,7 @@ namespace Otel.Sdk.Configuration
     public class TraceConfig
     {
         public List<string> IgnoreServerPathStartWith { get; set; }
-        public List<string> IgnoreHttpClientDnsStartWith { get; set; }
+        public List<string> IgnoreHttpClientHostStartWith { get; set; }
     }
 
     public class MetricConfig
