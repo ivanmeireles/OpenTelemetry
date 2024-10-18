@@ -16,9 +16,15 @@ namespace Otel.Sdk.Configuration
         public bool EnableConsoleExporter { get; set; }
 
 
-        public List<string> TraceIgnoreApplicationPathStartWith { get; set; }
+        public TraceConfig TraceConfig { get; set; }
         public MetricConfig MetricConfig { get; set; }
 
+    }
+
+    public class TraceConfig
+    {
+        public List<string> IgnoreServerPathStartWith { get; set; }
+        public List<string> IgnoreHttpClientDnsStartWith { get; set; }
     }
 
     public class MetricConfig

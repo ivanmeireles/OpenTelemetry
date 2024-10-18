@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Otel.Sdk.Configuration;
 using Otel.Sdk.Trace;
+using System;
+using System.Diagnostics;
 
 namespace Otel.Sdk.Extensions
 {
@@ -37,12 +37,29 @@ namespace Otel.Sdk.Extensions
                     .SetResourceBuilder(
                         ResourceBuilder.CreateDefault()
                             .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion))
-                    .AddHttpClientInstrumentation()
+                    .AddHttpClientInstrumentation(options => {
+                        if (config.TraceConfig?.IgnoreHttpClientDnsStartWith?.Count > 0)
+                        {
+                            foreach (var item in config.TraceConfig.IgnoreHttpClientDnsStartWith)
+                            {
+                                bool shouldIgnore = false;
+
+                                options.FilterHttpRequestMessage = context =>
+                                {
+                                    shouldIgnore = context.Headers.Host.StartsWith(item);
+                                    return !shouldIgnore;
+                                };
+
+                                if (shouldIgnore)
+                                    break;
+                            }
+                        }
+                    })
                     .AddAspNetCoreInstrumentation(options =>
                     {
-                        if (config.TraceIgnoreApplicationPathStartWith?.Count > 0)
+                        if (config.TraceConfig?.IgnoreServerPathStartWith?.Count > 0)
                         {
-                            foreach (var item in config.TraceIgnoreApplicationPathStartWith)
+                            foreach (var item in config.TraceConfig.IgnoreServerPathStartWith)
                             {
                                 bool shouldIgnore = false;
                                 options.Filter = context =>

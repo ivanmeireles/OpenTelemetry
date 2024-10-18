@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using Otel.Sdk.Extensions;
-using Otel.Sdk.Metric;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -11,10 +10,12 @@ namespace Otel.Sdk.HttpMiddleware
     internal class HttpRequestMetricsMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<HttpRequestMetricsMiddleware> _logger;
 
-        public HttpRequestMetricsMiddleware(RequestDelegate next)
+        public HttpRequestMetricsMiddleware(RequestDelegate next, ILogger<HttpRequestMetricsMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -32,30 +33,11 @@ namespace Otel.Sdk.HttpMiddleware
 
             try
             {
-                var watch = Stopwatch.StartNew();
-
-                OpenTelemetryMetricsExtension.HTTP_REQUEST_COUNTER.Add(1);
-
                 await _next(context);
-
-                var statusCode = context.Response.StatusCode;
-
-                if (statusCode >= 200 && statusCode <= 299)
-                    OpenTelemetryMetricsExtension.HTTP_REQUEST_200_COUNTER.Add(1);
-                else if (statusCode >= 400 && statusCode <= 499)
-                    OpenTelemetryMetricsExtension.HTTP_REQUEST_400_COUNTER.Add(1);
-                else if (statusCode >= 500)
-                    OpenTelemetryMetricsExtension.HTTP_REQUEST_500_COUNTER.Add(1);
-
-                watch.Stop();
-                var elapsedTime = (int)watch.ElapsedMilliseconds;
-                OpenTelemetryMetricsExtension.HTTP_REQUEST_ELAPSED_TIME.Record(elapsedTime);
             }
             catch (Exception ex)
             {
-                var exception = ex.InnerException ?? ex;
-                var tagExceptionName = MetricService.CreateTag(ConstValues.EXCEPTION_FULL_NAME, exception.GetType().FullName);
-                OpenTelemetryMetricsExtension.HTTP_REQUEST_500_COUNTER.Add(1, tagExceptionName);
+                _logger.LogError(ex.Message, ex);
                 throw ex;
             }
         }
