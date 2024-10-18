@@ -21,8 +21,8 @@ namespace Otel.MassTransit.Publish
             if (string.IsNullOrEmpty(activatyId) is false)
                 context.Headers.Set(Const.HEADER_TRACE_ID, activatyId);
 
-            //context.Headers.Set(Const.HEADER_PUBLISH, true);
-            //context.Headers.Set(Const.HEADER_SEND, false);
+            context.Headers.Set(Const.HEADER_PUBLISH, "true");
+            context.Headers.Set(Const.HEADER_SEND, "false");
         }
 
         public async Task PostPublish<T>(PublishContext<T> context) where T : class

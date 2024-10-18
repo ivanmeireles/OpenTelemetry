@@ -22,8 +22,8 @@ namespace Otel.MassTransit.Send
                 context.Headers.Set(Const.HEADER_TRACE_ID, activatyId);
 
 
-            //context.Headers.Set(Const.HEADER_SEND, true);
-            //context.Headers.Set(Const.HEADER_PUBLISH, false);
+            context.Headers.Set(Const.HEADER_SEND, "true");
+            context.Headers.Set(Const.HEADER_PUBLISH, "false");
         }
 
         public async Task PostSend<T>(SendContext<T> context) where T : class
