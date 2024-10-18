@@ -37,7 +37,8 @@ namespace Otel.Sdk.Extensions
                     .SetResourceBuilder(
                         ResourceBuilder.CreateDefault()
                             .AddService(serviceName: config.ServiceName, serviceVersion: config.ServiceVersion))
-                    .AddHttpClientInstrumentation(options => {
+                    .AddHttpClientInstrumentation(options =>
+                    {
                         if (config.TraceConfig?.IgnoreHttpClientHostStartWith?.Count > 0)
                         {
                             foreach (var item in config.TraceConfig.IgnoreHttpClientHostStartWith)
@@ -46,7 +47,9 @@ namespace Otel.Sdk.Extensions
 
                                 options.FilterHttpRequestMessage = context =>
                                 {
-                                    shouldIgnore = context.Headers.Host.StartsWith(item);
+                                    if (string.IsNullOrEmpty(context.Headers.Host) == false)
+                                        shouldIgnore = context.Headers.Host.StartsWith(item);
+
                                     return !shouldIgnore;
                                 };
 
