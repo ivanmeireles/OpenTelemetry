@@ -18,7 +18,8 @@ namespace Otel.MassTransit.Consume
 
         public async Task PreConsume<T>(ConsumeContext<T> context) where T : class
         {
-            var wasCommand = string.IsNullOrEmpty(context.GetHeader(Const.HEADER_SEND)) == false;
+            var headerValue = context.GetHeader(Const.HEADER_SEND);
+            var wasCommand = headerValue == "true";
             var traceId = string.Empty;
 
             if (wasCommand)
