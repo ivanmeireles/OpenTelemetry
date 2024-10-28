@@ -24,7 +24,13 @@ namespace Otel.MassTransit.Consume
 
         public async Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
         {
-            _logger.LogError(exception.Message, exception);
+            try
+            {
+                _logger.LogError(exception.Message, exception);
+            }
+            catch
+            {
+            }
         }
     }
 }

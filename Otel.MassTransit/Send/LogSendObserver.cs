@@ -24,7 +24,13 @@ namespace Otel.MassTransit.Send
 
         public async Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
         {
-            _logger.LogError(exception.Message, exception);
+            try
+            {
+                _logger.LogError(exception.Message, exception);
+            }
+            catch
+            {
+            }
         }
     }
 }

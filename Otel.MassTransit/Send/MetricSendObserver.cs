@@ -36,9 +36,15 @@ namespace Otel.MassTransit.Send
 
         public async Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
         {
-            _tags.TryAdd(TAG_SUCCESS, "false");
-            _tags.TryAdd(TAG_EXCEPTION_NAME, exception.GetType().Name);
-            DoneConsume();
+            try
+            {
+                _tags.TryAdd(TAG_SUCCESS, "false");
+                _tags.TryAdd(TAG_EXCEPTION_NAME, exception.GetType().Name);
+                DoneConsume();
+            }
+            catch
+            {
+            }
         }
 
         private void DoneConsume()

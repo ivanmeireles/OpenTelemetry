@@ -35,8 +35,14 @@ namespace Otel.MassTransit.Consume
 
         public async Task ConsumeFault<T>(ConsumeContext<T> context, Exception exception) where T : class
         {
-            activity?.AddException(exception);
-            activity?.Dispose();
+            try
+            {
+                activity?.AddException(exception);
+                activity?.Dispose();
+            }
+            catch
+            {
+            }
         }
     }
 }

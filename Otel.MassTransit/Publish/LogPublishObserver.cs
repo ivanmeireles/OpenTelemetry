@@ -24,7 +24,13 @@ namespace Otel.MassTransit.Publish
 
         public async Task PublishFault<T>(PublishContext<T> context, Exception exception) where T : class
         {
-            _logger.LogError(exception.Message, exception);
+            try
+            {
+                _logger.LogError(exception.Message, exception);
+            }
+            catch
+            {
+            }
         }
     }
 }
