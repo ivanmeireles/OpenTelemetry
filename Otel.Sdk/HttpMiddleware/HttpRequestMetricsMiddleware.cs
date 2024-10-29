@@ -23,11 +23,22 @@ namespace Otel.Sdk.HttpMiddleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            string item = context.Request.Path.Value.ToLower();
-            if (OpenTelemetryMetricsExtension.OTLP_CONFIG?.MetricConfig?.IgnorePaths.Contains(item) == true)
+            var path = context.Request.Path.Value.ToLower();
+            if (OpenTelemetryMetricsExtension.OTLP_CONFIG?.MetricConfig?.IgnorePathStartWith?.Count > 0)
             {
-                await _next(context);
-                return;
+                var shouldIgnoreMetrics = false;
+                foreach (var ignorePathStartWith in OpenTelemetryMetricsExtension.OTLP_CONFIG.MetricConfig.IgnorePathStartWith)
+                {
+                    shouldIgnoreMetrics = path.StartsWith(ignorePathStartWith);
+                    if (shouldIgnoreMetrics)
+                        break;
+                }
+
+                if (shouldIgnoreMetrics)
+                {
+                    await _next(context);
+                    return;
+                }
             }
 
             var activity = Activity.Current;

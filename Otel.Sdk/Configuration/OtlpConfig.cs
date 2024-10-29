@@ -32,6 +32,6 @@ namespace Otel.Sdk.Configuration
         public bool HttpClientInstrumentationDisabled { get; set; }
         public bool AspNetCoreInstrumentationDisabled { get; set; }
 
-        public List<string> IgnorePaths { get; set; }
+        public List<string> IgnorePathStartWith { get; set; }
     }
 }
