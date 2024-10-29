@@ -18,7 +18,6 @@ namespace Otel.Sdk.Configuration
 
         public TraceConfig TraceConfig { get; set; }
         public MetricConfig MetricConfig { get; set; }
-
     }
 
     public class TraceConfig
@@ -32,5 +31,7 @@ namespace Otel.Sdk.Configuration
         public bool RuntimeInstrumentationDisabled { get; set; }
         public bool HttpClientInstrumentationDisabled { get; set; }
         public bool AspNetCoreInstrumentationDisabled { get; set; }
+
+        public List<string> IgnorePaths { get; set; }
     }
 }

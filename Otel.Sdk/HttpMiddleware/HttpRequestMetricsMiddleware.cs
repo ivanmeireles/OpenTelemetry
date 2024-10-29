@@ -23,6 +23,13 @@ namespace Otel.Sdk.HttpMiddleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            string item = context.Request.Path.Value.ToLower();
+            if (OpenTelemetryMetricsExtension.OTLP_CONFIG?.MetricConfig?.IgnorePaths.Contains(item) == true)
+            {
+                await _next(context);
+                return;
+            }
+
             var activity = Activity.Current;
             Stopwatch watch = Stopwatch.StartNew();
             List<KeyValuePair<string, object?>> listTags = new List<KeyValuePair<string, object>>();

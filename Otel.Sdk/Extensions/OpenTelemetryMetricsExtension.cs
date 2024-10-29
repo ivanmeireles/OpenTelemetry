@@ -19,9 +19,12 @@ namespace Otel.Sdk.Extensions
         internal static Meter METER;
         internal static Histogram<int> HTTP_REQUEST_ELAPSED_TIME;
         internal static Counter<int> HEART_BEAT;
+        internal static OtlpConfig OTLP_CONFIG;
 
         public static MeterProviderBuilder AddOtlpMetrics(this IServiceCollection services, OtlpConfig config)
         {
+            OTLP_CONFIG = config;
+
             MeterProviderBuilder meterBuilder = default;
             METER = new Meter(config.ServiceName, config.ServiceVersion);
 
