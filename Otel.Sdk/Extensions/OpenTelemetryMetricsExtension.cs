@@ -17,6 +17,7 @@ namespace Otel.Sdk.Extensions
     public static class OpenTelemetryMetricsExtension
     {
         internal static Meter METER;
+        internal static Histogram<int> HTTP_REQUEST_ELAPSED_TIME;
         internal static Counter<int> HEART_BEAT;
 
         public static MeterProviderBuilder AddOtlpMetrics(this IServiceCollection services, OtlpConfig config)
@@ -86,6 +87,7 @@ namespace Otel.Sdk.Extensions
                 throw new MetricStartupException();
 
             HEART_BEAT = METER.CreateCounter<int>("heart_beat");
+            HTTP_REQUEST_ELAPSED_TIME = METER.CreateHistogram<int>("http_request_elapsed_time");
             StartHeartBeat();
 
             return builder.UseMiddleware<HttpRequestMetricsMiddleware>();
