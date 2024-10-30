@@ -4,7 +4,7 @@ using System.Diagnostics.Metrics;
 
 namespace Otel.Sdk.Metric
 {
-    internal class MetricService : IMetricService
+    public class MetricService : IMetricService
     {
         private static readonly IDictionary<string, Instrument> metrics = new Dictionary<string, Instrument>();
 
