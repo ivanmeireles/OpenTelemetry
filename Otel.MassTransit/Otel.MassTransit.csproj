@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>1.5.5-beta1</Version>
+    <Version>1.5.6-beta1</Version>
 	<RootNamespace>Otel.MassTransit</RootNamespace>
 	<PackageTags>Otel;OpenTelemetry;MassTransit</PackageTags>
 	<PackageDescription>OpenTelemetry package.</PackageDescription>
