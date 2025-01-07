@@ -14,29 +14,27 @@ namespace Otel.Sdk.Trace
             return OpenTelemetryTracingExtension.ACTIVITY_SOURCE;
         }
 
-        public Activity? StartActivity(string name = "", ActivityKind kind = ActivityKind.Internal, string externalTraceId = null)
+        public Activity? StartActivity(string name = "", ActivityKind kind = ActivityKind.Internal, string? externalTraceId = null)
         {
 
             if (string.IsNullOrEmpty(externalTraceId))
-                return OpenTelemetryTracingExtension.ACTIVITY_SOURCE.StartActivity(name, kind);
-            else
             {
-                var (parentTraceId, parentSpanId) = GetParents(externalTraceId);
-                if (parentTraceId is null || parentSpanId is null)
-                    return StartActivity(name, kind);
-
-                var parentContext = new ActivityContext(
-                    ActivityTraceId.CreateFromString(parentTraceId),
-                    ActivitySpanId.CreateFromString(parentSpanId),
-                    ActivityTraceFlags.Recorded);
-
-                return OpenTelemetryTracingExtension.ACTIVITY_SOURCE.StartActivity(name, kind, parentContext);
+                return OpenTelemetryTracingExtension.ACTIVITY_SOURCE.StartActivity(name, kind);
             }
+            
+            var (parentTraceId, parentSpanId) = GetParents(externalTraceId);
+            if (parentTraceId is null || parentSpanId is null)
+                return StartActivity(name, kind);
 
-            return null;
+            var parentContext = new ActivityContext(
+                ActivityTraceId.CreateFromString(parentTraceId),
+                ActivitySpanId.CreateFromString(parentSpanId),
+                ActivityTraceFlags.Recorded);
+
+            return OpenTelemetryTracingExtension.ACTIVITY_SOURCE.StartActivity(name, kind, parentContext);
         }
 
-        private (string parentTraceId, string parentSpanId) GetParents(string externalTraceId)
+        private (string? parentTraceId, string? parentSpanId) GetParents(string externalTraceId)
         {
             try
             {
@@ -45,13 +43,12 @@ namespace Otel.Sdk.Trace
                 {
                     return (traceValues[1], traceValues[2]);
                 }
-
-                return (null, null);
             }
             catch
             {
-                return (null, null);
+                // ignored
             }
+            return (null, null);
         }
     }
 }
