@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="MassTransit" Version="8.3.0" />
-    <PackageReference Include="Otel.Sdk" Version="1.7.4-beta1" />
+    <PackageReference Include="Otel.Sdk" Version="1.7.5-beta1" />
   </ItemGroup>
 
 </Project>
