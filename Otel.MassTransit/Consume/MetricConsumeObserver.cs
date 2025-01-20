@@ -49,10 +49,13 @@ namespace Otel.MassTransit.Consume
 
         private void DoneConsume()
         {
-            _stopwatch.Stop();
-            var elapsedTime = (int)_stopwatch.ElapsedMilliseconds;
+            lock (_stopwatch)
+            {
+                _stopwatch.Stop();
+                var elapsedTime = (int)_stopwatch.ElapsedMilliseconds;
 
-            _metricService.HistogramRecord(Const.METRIC_CONSUMER_NAME, elapsedTime, _tags.ToArray());
+                _metricService.HistogramRecord(Const.METRIC_CONSUMER_NAME, elapsedTime, _tags.ToArray());   
+            }
         }
     }
 }
