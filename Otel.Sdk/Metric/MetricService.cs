@@ -24,7 +24,7 @@ namespace Otel.Sdk.Metric
                 metrics.Add(meterName, instrument);
             }
 
-            instrument?.Add(value);
+            instrument?.Add(value, tags);
         }
 
         public void HistogramRecord<T>(string meterName, T value, params KeyValuePair<string, object?>[] tags) where T : struct
