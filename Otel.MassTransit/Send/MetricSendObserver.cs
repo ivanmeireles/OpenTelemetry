@@ -1,8 +1,6 @@
 ﻿using MassTransit;
 using Otel.Sdk.Metric;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,49 +8,62 @@ namespace Otel.MassTransit.Send
 {
     public class MetricSendObserver : ISendObserver
     {
-        private Stopwatch _stopwatch;
         private readonly IMetricService _metricService;
-        private IDictionary<string, object?> _tags;
-
-        private const string TAG_SUCCESS = "success";
-        private const string TAG_EXCEPTION_NAME = "exception_name";
 
         public MetricSendObserver(IMetricService metricService)
+            => _metricService = metricService;
+
+        public Task PreSend<T>(SendContext<T> context) where T : class
         {
-            _metricService = metricService;
-            _tags = new Dictionary<string, object?>();
+            context.GetOrAddPayload(() =>
+            {
+                var metricData = new MetricDataObserver();
+                metricData.StartWatch();
+
+                var queueName = context.DestinationAddress?.AbsolutePath;
+                if (queueName != null)
+                {
+                    metricData.AddTag(Const.TAG_QUEUE_NAME, queueName);
+                }
+
+                return metricData;
+            });
+            return Task.CompletedTask;
         }
 
-        public async Task PreSend<T>(SendContext<T> context) where T : class
+        public Task PostSend<T>(SendContext<T> context) where T : class
         {
-            _stopwatch = Stopwatch.StartNew();
+            if (context.TryGetPayload(out MetricDataObserver metricData))
+            {
+                metricData.StopWatchConsumerSuccess();
+                DoneConsume(metricData);
+            }
+            return Task.CompletedTask;
         }
 
-        public async Task PostSend<T>(SendContext<T> context) where T : class
-        {
-            _tags.TryAdd(TAG_SUCCESS, "true");
-            DoneConsume();
-        }
-
-        public async Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
+        public Task SendFault<T>(SendContext<T> context, Exception exception) where T : class
         {
             try
             {
-                _tags.TryAdd(TAG_SUCCESS, "false");
-                _tags.TryAdd(TAG_EXCEPTION_NAME, exception.GetType().Name);
-                DoneConsume();
+                if (context.TryGetPayload(out MetricDataObserver metricData))
+                {
+                    metricData.StopWatchConsumerFail(exception.GetType().Name);
+                    DoneConsume(metricData);
+                }
             }
             catch
             {
             }
+            return Task.CompletedTask;
         }
 
-        private void DoneConsume()
+        private void DoneConsume(MetricDataObserver metricData)
         {
-            _stopwatch.Stop();
-            var elapsedTime = (int)_stopwatch.ElapsedMilliseconds;
-
-            _metricService.HistogramRecord(Const.METRIC_SEND_NAME, elapsedTime, _tags.ToArray());
+            _metricService.HistogramRecord(
+                Const.METRIC_SEND_NAME,
+                metricData.GetElapsedMilliseconds,
+                metricData.Tags.ToArray()
+            );
         }
     }
 }

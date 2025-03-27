@@ -9,5 +9,7 @@
         public const string METRIC_CONSUMER_NAME = "masstransit_consumer";
         public const string METRIC_SEND_NAME = "masstransit_send";
         public const string METRIC_PUBLISH_NAME = "masstransit_publish";
+
+        public const string TAG_QUEUE_NAME = "queue_name";
     }
 }
