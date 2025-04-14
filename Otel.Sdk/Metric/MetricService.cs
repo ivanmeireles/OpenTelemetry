@@ -15,30 +15,36 @@ namespace Otel.Sdk.Metric
 
         public void CounterAdd<T>(string meterName, T value, params KeyValuePair<string, object?>[] tags) where T : struct
         {
-            Counter<T>? instrument;
-            if (metrics.ContainsKey(meterName))
-                instrument = metrics[meterName] as Counter<T>;
-            else
+            lock (metrics)
             {
-                instrument = GetCurrentMeter().CreateCounter<T>(meterName);
-                metrics.Add(meterName, instrument);
-            }
+                Counter<T>? instrument;
+                if (metrics.ContainsKey(meterName))
+                    instrument = metrics[meterName] as Counter<T>;
+                else
+                {
+                    instrument = GetCurrentMeter().CreateCounter<T>(meterName);
+                    metrics.Add(meterName, instrument);
+                }
 
-            instrument?.Add(value, tags);
+                instrument?.Add(value, tags);
+            }
         }
 
         public void HistogramRecord<T>(string meterName, T value, params KeyValuePair<string, object?>[] tags) where T : struct
         {
-            Histogram<T>? instrument;
-            if (metrics.ContainsKey(meterName))
-                instrument = metrics[meterName] as Histogram<T>;
-            else
+            lock (metrics)
             {
-                instrument = GetCurrentMeter().CreateHistogram<T>(meterName);
-                metrics.Add(meterName, instrument);
-            }
+                Histogram<T>? instrument;
+                if (metrics.ContainsKey(meterName))
+                    instrument = metrics[meterName] as Histogram<T>;
+                else
+                {
+                    instrument = GetCurrentMeter().CreateHistogram<T>(meterName);
+                    metrics.Add(meterName, instrument);
+                }
 
-            instrument?.Record(value, tags);
+                instrument?.Record(value, tags);
+            }
         }
 
         public static KeyValuePair<string, object?> CreateTag(string name, object? value)
