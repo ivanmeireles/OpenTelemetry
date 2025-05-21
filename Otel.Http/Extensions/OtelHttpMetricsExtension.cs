@@ -6,7 +6,7 @@ using Otel.Sdk.Metric;
 
 namespace Otel.Http.Extensions
 {
-    internal static class OtelHttpMetricsExtension
+    public static class OtelHttpMetricsExtension
     {
         public static IApplicationBuilder UseMetrics(this IApplicationBuilder builder)
         {
