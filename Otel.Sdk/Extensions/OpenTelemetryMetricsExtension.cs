@@ -1,15 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Diagnostics.Metrics;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
-using Otel.Sdk.Configuration;
-using Otel.Sdk.Exceptions;
-using System;
-using System.Diagnostics.Metrics;
 using OpenTelemetry.Resources;
-using Otel.Sdk.HttpMiddleware;
+using Otel.Sdk.Configuration;
 using Otel.Sdk.Metric;
-using System.Threading.Tasks;
 
 
 namespace Otel.Sdk.Extensions
@@ -17,9 +13,7 @@ namespace Otel.Sdk.Extensions
     public static class OpenTelemetryMetricsExtension
     {
         internal static Meter METER;
-        internal static Histogram<int> HTTP_REQUEST_ELAPSED_TIME;
-        internal static Counter<int> HEART_BEAT;
-        internal static OtlpConfig OTLP_CONFIG;
+        public static OtlpConfig OTLP_CONFIG;
 
         public static MeterProviderBuilder AddOtlpMetrics(this IServiceCollection services, OtlpConfig config)
         {
@@ -70,30 +64,6 @@ namespace Otel.Sdk.Extensions
 
             
             return meterBuilder;
-        }
-
-        private static void StartHeartBeat()
-        {
-            Task.Run(async() => {
-                while (true)
-                {
-
-                    HEART_BEAT.Add(1);
-                    await Task.Delay(30000);
-                }
-            });
-        }
-
-        public static IApplicationBuilder UseMetrics(this IApplicationBuilder builder)
-        {
-            if (METER is null)
-                throw new MetricStartupException();
-
-            HEART_BEAT = METER.CreateCounter<int>("heart_beat");
-            HTTP_REQUEST_ELAPSED_TIME = METER.CreateHistogram<int>("http_request_elapsed_time");
-            StartHeartBeat();
-
-            return builder.UseMiddleware<HttpRequestMetricsMiddleware>();
         }
     }
 }
