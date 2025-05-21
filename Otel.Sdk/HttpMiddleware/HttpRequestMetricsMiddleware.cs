@@ -46,7 +46,6 @@ namespace Otel.Sdk.HttpMiddleware
             List<KeyValuePair<string, object?>> listTags = new List<KeyValuePair<string, object>>();
 
             listTags.Add(MetricService.CreateTag("http_method", context.Request.Method));
-            listTags.Add(MetricService.CreateTag("path", path));
 
             if (activity != null)
             {
