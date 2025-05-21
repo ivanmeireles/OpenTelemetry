@@ -17,7 +17,6 @@ namespace Otel.Http.Extensions
                 throw new MetricStartupException();
 
             HttpRequestMetricsMiddleware.HTTP_REQUEST_ELAPSED_TIME = meter.CreateHistogram<int>("http_request_elapsed_time");
-
             return builder.UseMiddleware<HttpRequestMetricsMiddleware>();
         }
     }

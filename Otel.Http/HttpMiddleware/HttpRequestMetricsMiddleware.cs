@@ -20,7 +20,7 @@ namespace Otel.Sdk.HttpMiddleware
             _next = next;
             _logger = logger;
         }
-
+        
         public async Task InvokeAsync(HttpContext context)
         {
             var path = context.Request.Path.Value.ToLower();
