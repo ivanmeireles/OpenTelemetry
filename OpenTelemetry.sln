@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{64CD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{D607E8ED-45A7-4EB7-B0B2-BE3DCD26FEDB}"
 	ProjectSection(SolutionItems) = preProject
+		OtelHttp.yaml = OtelHttp.yaml
 		.github\workflows\OtelMassTransit.yaml = .github\workflows\OtelMassTransit.yaml
 		.github\workflows\OtelSdk.yaml = .github\workflows\OtelSdk.yaml
 	EndProjectSection
