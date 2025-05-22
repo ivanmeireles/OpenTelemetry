@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Otel.Sdk.Extensions;
@@ -98,9 +99,8 @@ namespace Otel.Sdk.HttpMiddleware
 
         private string GetRoute(HttpContext context)
         {
-            var endpoint = context.GetEndpoint();
-            return endpoint?.Metadata
-                .GetMetadata<Microsoft.AspNetCore.Routing.RouteEndpoint>()?.RoutePattern?.RawText ?? "";
+            var endpoint = context.GetEndpoint() as RouteEndpoint;
+            return endpoint?.RoutePattern?.RawText ?? "";
         }
     }
 }
