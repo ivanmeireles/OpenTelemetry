@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Metrics;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
@@ -13,6 +14,7 @@ namespace Otel.Sdk.Extensions
     public static class OpenTelemetryMetricsExtension
     {
         internal static Meter METER;
+        internal static Counter<int> HEART_BEAT;
         public static OtlpConfig OTLP_CONFIG;
 
         public static MeterProviderBuilder AddOtlpMetrics(this IServiceCollection services, OtlpConfig config)
@@ -62,8 +64,22 @@ namespace Otel.Sdk.Extensions
                     builder.AddConsoleExporter();
             });
 
-            
+            HEART_BEAT = METER.CreateCounter<int>("heart_beat");
+            StartHeartBeat();
+
             return meterBuilder;
+        }
+
+        private static void StartHeartBeat()
+        {
+            Task.Run(async () => {
+                while (true)
+                {
+
+                    HEART_BEAT.Add(1);
+                    await Task.Delay(30000);
+                }
+            });
         }
     }
 }
